@@ -32,3 +32,4 @@ yarn-error.log
 ###< symfony/asset-mapper ###
 
 *.swp
+/config/reference.php

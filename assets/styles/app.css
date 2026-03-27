@@ -1,5 +1,2 @@
-@import "../vendor/daisyui/daisyui.min.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
