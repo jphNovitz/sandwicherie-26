@@ -4,7 +4,7 @@
 {% block meta_description %}Contactez Sandwicherie 26 pour une demande d'information, une commande ou un besoin particulier.{% endblock %}
 
 {% block body %}
-    <section class="mx-auto max-w-3xl space-y-6">
+    <section class="mx-auto max-w-3xl space-y-6 px-0">
         <div class="space-y-2">
             <h1>Contact</h1>
             <p>
@@ -18,7 +18,7 @@
             </div>
         {% endfor %}
 
-        <div class="rounded-box border border-base-300 bg-base-100 p-6">
+        <div class="rounded-box border border-base-300 bg-base-100 p-5 sm:p-6">
             {{ form_start(form, {attr: {class: 'space-y-4'}}) }}
                 <div class="form-control">
                     {{ form_label(form.name, 'Nom', {label_attr: {class: 'label'}}) }}
@@ -38,7 +38,7 @@
                     {{ form_errors(form.message) }}
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">
                     Envoyer
                 </button>
             {{ form_end(form) }}

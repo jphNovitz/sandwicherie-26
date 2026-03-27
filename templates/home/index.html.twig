@@ -4,19 +4,19 @@
 {% block meta_description %}Decouvrez Sandwicherie 26, ses produits disponibles et une offre de quartier simple pour la pause dejeuner.{% endblock %}
 
 {% block body %}
-    <section class="hero rounded-box bg-base-200 px-6 py-16">
+    <section class="hero rounded-box bg-base-200 px-4 py-10 sm:px-6 sm:py-16">
         <div class="hero-content max-w-3xl text-center">
             <div class="space-y-6">
                 <h1>Des sandwiches prepares simplement, servis rapidement.</h1>
                 <p>
                     Sandwicherie 26 propose une pause dejeuner claire, rapide et conviviale au coeur du quartier.
                 </p>
-                <a href="#contact" class="btn btn-primary">Nous contacter</a>
+                <a href="#contact" class="btn btn-primary w-full sm:w-auto">Nous contacter</a>
             </div>
         </div>
     </section>
 
-    <section class="py-12">
+    <section class="py-10 sm:py-12">
         <div class="max-w-3xl space-y-4">
             <h2>Une sandwicherie de quartier</h2>
             <p>
@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <section class="py-8">
+    <section class="py-6 sm:py-8">
         <div class="space-y-6">
             <div class="max-w-3xl space-y-2">
                 <h2>Notre selection</h2>
@@ -44,10 +44,10 @@
                 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {% for product in products %}
                         <article class="card border border-base-300 bg-base-100 shadow-sm">
-                            <div class="card-body">
+                            <div class="card-body p-5 sm:p-6">
                                 <h3 class="card-title">{{ product.name }}</h3>
                                 <p>{{ product.description ?: 'Description a venir.' }}</p>
-                                <div class="card-actions items-center justify-between">
+                                <div class="card-actions flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <span class="text-lg font-semibold">
                                         {{ product.price|number_format(2, ',', ' ') }} EUR
                                     </span>
@@ -61,14 +61,14 @@
         </div>
     </section>
 
-    <section id="contact" class="py-8">
-        <div class="rounded-box border border-base-300 bg-base-100 p-6">
+    <section id="contact" class="py-6 sm:py-8">
+        <div class="rounded-box border border-base-300 bg-base-100 p-5 sm:p-6">
             <div class="max-w-2xl space-y-4">
                 <h2>Un besoin particulier ?</h2>
                 <p>
                     Contactez-nous pour une commande, une demande d'information ou pour preparer la suite du contenu du site.
                 </p>
-                <a href="mailto:contact@sandwicherie26.test" class="btn btn-outline btn-primary">
+                <a href="mailto:contact@sandwicherie26.test" class="btn btn-outline btn-primary w-full sm:w-auto">
                     Envoyer un message
                 </a>
             </div>
