@@ -28,6 +28,38 @@
         </div>
     </section>
 
+    <section class="py-8">
+        <div class="space-y-6">
+            <div class="max-w-3xl space-y-2">
+                <h2>Notre selection</h2>
+                <p>Retrouve ici quelques produits disponibles a la commande.</p>
+            </div>
+
+            {% if products is empty %}
+                <div class="rounded-box border border-dashed border-base-300 bg-base-100 p-6">
+                    <p>Aucun produit disponible pour le moment.</p>
+                </div>
+            {% else %}
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {% for product in products %}
+                        <article class="card border border-base-300 bg-base-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ product.name }}</h3>
+                                <p>{{ product.description ?: 'Description a venir.' }}</p>
+                                <div class="card-actions items-center justify-between">
+                                    <span class="text-lg font-semibold">
+                                        {{ product.price|number_format(2, ',', ' ') }} EUR
+                                    </span>
+                                    <span class="badge badge-primary">Disponible</span>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
     <section id="contact" class="py-8">
         <div class="rounded-box border border-base-300 bg-base-100 p-6">
             <div class="max-w-2xl space-y-4">
