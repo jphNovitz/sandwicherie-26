@@ -11,6 +11,12 @@
             </p>
         </div>
 
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+
         <div class="rounded-box border border-base-300 bg-base-100 p-6">
             {{ form_start(form, {attr: {class: 'space-y-4'}}) }}
                 <div class="form-control">
@@ -31,7 +37,7 @@
                     {{ form_errors(form.message) }}
                 </div>
 
-                <button type="submit" class="btn btn-primary" disabled>
+                <button type="submit" class="btn btn-primary">
                     Envoyer
                 </button>
             {{ form_end(form) }}
