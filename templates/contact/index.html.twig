@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact | Sandwicherie 26{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-3xl space-y-6">
+        <div class="space-y-2">
+            <h1>Contact</h1>
+            <p>
+                Une structure simple pour permettre aux visiteurs de nous envoyer un message.
+            </p>
+        </div>
+
+        <div class="rounded-box border border-base-300 bg-base-100 p-6">
+            {{ form_start(form, {attr: {class: 'space-y-4'}}) }}
+                <div class="form-control">
+                    {{ form_label(form.name, 'Nom', {label_attr: {class: 'label'}}) }}
+                    {{ form_widget(form.name, {attr: {class: 'input input-bordered w-full'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="form-control">
+                    {{ form_label(form.email, 'Email', {label_attr: {class: 'label'}}) }}
+                    {{ form_widget(form.email, {attr: {class: 'input input-bordered w-full'}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <div class="form-control">
+                    {{ form_label(form.message, 'Message', {label_attr: {class: 'label'}}) }}
+                    {{ form_widget(form.message, {attr: {class: 'textarea textarea-bordered w-full'}}) }}
+                    {{ form_errors(form.message) }}
+                </div>
+
+                <button type="submit" class="btn btn-primary" disabled>
+                    Envoyer
+                </button>
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}
