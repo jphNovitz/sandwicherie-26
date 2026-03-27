@@ -3,12 +3,42 @@
 {% block title %}Accueil | Sandwicherie 26{% endblock %}
 
 {% block body %}
+    <section class="hero rounded-box bg-base-200 px-6 py-16">
+        <div class="hero-content max-w-3xl text-center">
+            <div class="space-y-6">
+                <h1>Des sandwiches prepares simplement, servis rapidement.</h1>
+                <p>
+                    Sandwicherie 26 propose une pause dejeuner claire, rapide et conviviale au coeur du quartier.
+                </p>
+                <a href="#contact" class="btn btn-primary">Nous contacter</a>
+            </div>
+        </div>
+    </section>
+
     <section class="py-12">
         <div class="max-w-3xl space-y-4">
-            <h1>Bienvenue chez Sandwicherie 26</h1>
+            <h2>Une sandwicherie de quartier</h2>
             <p>
-                Une page d'accueil simple, prête a accueillir le contenu du site vitrine.
+                Nous preparons chaque jour une offre simple, genereuse et accessible, pensee pour les pauses dejeuner
+                et les petites faims.
             </p>
+            <p>
+                Cette homepage pose la structure de base du site vitrine avant l'ajout du contenu detaille.
+            </p>
+        </div>
+    </section>
+
+    <section id="contact" class="py-8">
+        <div class="rounded-box border border-base-300 bg-base-100 p-6">
+            <div class="max-w-2xl space-y-4">
+                <h2>Un besoin particulier ?</h2>
+                <p>
+                    Contactez-nous pour une commande, une demande d'information ou pour preparer la suite du contenu du site.
+                </p>
+                <a href="mailto:contact@sandwicherie26.test" class="btn btn-outline btn-primary">
+                    Envoyer un message
+                </a>
+            </div>
         </div>
     </section>
 {% endblock %}
