@@ -48,6 +48,7 @@ return static function (ContainerConfigurator $container): void {
                 'form_login' => [
                     'login_path' => 'app_login',
                     'check_path' => 'app_login',
+                    'default_target_path' => 'admin',
                 ],
                 'logout' => [
                     'path' => 'app_logout',
