@@ -49,6 +49,10 @@ return static function (ContainerConfigurator $container): void {
                     'login_path' => 'app_login',
                     'check_path' => 'app_login',
                 ],
+                'logout' => [
+                    'path' => 'app_logout',
+                    'target' => 'app_home',
+                ],
             ],
         ],
         'access_control' => [
