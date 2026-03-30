@@ -4,7 +4,6 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,14 +37,6 @@ class ContactType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('phone', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Length([
-                        'max' => 50,
-                    ]),
-                ],
-            ])
             ->add('message', TextareaType::class, [
                 'attr' => [
                     'rows' => 6,
@@ -59,10 +50,6 @@ class ContactType extends AbstractType
                         'minMessage' => 'Votre message doit contenir au moins {{ limit }} caracteres.',
                     ]),
                 ],
-            ])
-            ->add('website', HiddenType::class, [
-                'mapped' => false,
-                'required' => false,
             ])
         ;
     }

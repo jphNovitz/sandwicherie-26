@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
-use App\Service\FrontDataProvider;
-use App\Service\SiteMapBuilder;
+use App\Enum\PageCode;
+use App\Entity\Page;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -11,18 +13,17 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(FrontDataProvider $frontDataProvider, SiteMapBuilder $siteMapBuilder): Response
+    public function index(ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
     {
-        $siteSettings = $frontDataProvider->getSiteSettings();
+        /** @var Page|null $page */
+        $page = $entityManager->getRepository(Page::class)->findOneBy([
+            'code' => PageCode::HOME,
+            'isActive' => true,
+        ]);
 
         return $this->render('home/index.html.twig', [
-            'page' => $frontDataProvider->getPage(\App\Enum\PageCode::HOME),
-            'site_settings' => $siteSettings,
-            'featured_items' => $frontDataProvider->getFeaturedItems(),
-            'opening_hours' => $frontDataProvider->getOpeningHours(),
-            'reviews' => $frontDataProvider->getVisibleReviews(),
-            'gallery_images' => $frontDataProvider->getGalleryImages(),
-            'itinerary_url' => $siteSettings ? $siteMapBuilder->buildItineraryUrl($siteSettings) : null,
+            'products' => $productRepository->findBy(['isAvailable' => true], ['id' => 'DESC']),
+            'page' => $page,
         ]);
     }
 }
