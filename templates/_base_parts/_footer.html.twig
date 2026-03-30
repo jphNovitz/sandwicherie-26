@@ -1,15 +1,82 @@
-<footer class="mt-12 bg-base-300/70">
-    <div class="mx-auto grid w-full max-w-screen-xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
+{% set site_settings = front_data.siteSettings %}
+{% set opening_hours = front_data.openingHours %}
+{% set social_links = front_data.socialLinks %}
+{% set legal_pages = front_data.legalPages %}
+<footer class="mt-12 bg-base-300/80">
+    <div class="mx-auto grid w-full max-w-screen-xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.05fr_0.95fr_0.8fr] lg:px-8">
         <div class="space-y-3">
-            <p class="font-headline text-lg font-extrabold uppercase tracking-tight text-primary">Sandwicherie 26</p>
-            <p class="max-w-xl text-sm leading-6 text-base-content/72">
-                Une sandwicherie de quartier au ton editorial chaleureux, pensee pour les pauses dejeuner simples,
-                genereuses et bien executees.
+            <p class="font-headline text-lg font-extrabold uppercase tracking-tight text-primary">
+                {{ site_settings and site_settings.businessName ? site_settings.businessName : 'Sandwicherie 26' }}
             </p>
+            {% if site_settings and site_settings.slogan %}
+                <p class="max-w-xl text-sm leading-6 text-base-content/72">{{ site_settings.slogan }}</p>
+            {% endif %}
+            <div class="space-y-1 text-sm text-base-content/72">
+                {% if site_settings and site_settings.shortAddress %}
+                    <p>{{ site_settings.shortAddress }}</p>
+                {% elseif site_settings and site_settings.fullAddress %}
+                    <p>{{ site_settings.fullAddress }}</p>
+                {% endif %}
+                {% if site_settings and site_settings.phone %}
+                    <p><a href="tel:{{ site_settings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="no-underline hover:text-primary">{{ site_settings.phone }}</a></p>
+                {% endif %}
+                {% if site_settings and site_settings.email %}
+                    <p><a href="mailto:{{ site_settings.email }}" class="no-underline hover:text-primary">{{ site_settings.email }}</a></p>
+                {% endif %}
+                {% if site_settings and site_settings.whatsapp %}
+                    <p>WhatsApp : {{ site_settings.whatsapp }}</p>
+                {% endif %}
+            </div>
         </div>
-        <div class="space-y-2 text-sm text-base-content/72 lg:justify-self-end lg:text-right">
-            <p>&copy; {{ "now"|date("Y") }} Sandwicherie 26</p>
-            <p>Commandes, demandes et informations via notre page contact.</p>
+
+        <div class="space-y-3">
+            <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Horaires</p>
+            <div class="space-y-2 text-sm text-base-content/72">
+                {% for opening_hour in opening_hours|slice(0, 4) %}
+                    <div class="flex justify-between gap-4">
+                        <span>{{ {
+                            monday: 'Lun',
+                            tuesday: 'Mar',
+                            wednesday: 'Mer',
+                            thursday: 'Jeu',
+                            friday: 'Ven',
+                            saturday: 'Sam',
+                            sunday: 'Dim'
+                        }[opening_hour.dayOfWeek.value] }}</span>
+                        <span class="text-right">
+                            {% if opening_hour.isClosed %}
+                                Ferme
+                            {% else %}
+                                {{ opening_hour.firstOpeningAt ? opening_hour.firstOpeningAt|date('H:i') : '' }}{% if opening_hour.firstClosingAt %} - {{ opening_hour.firstClosingAt|date('H:i') }}{% endif %}
+                            {% endif %}
+                        </span>
+                    </div>
+                {% else %}
+                    <p>Horaires a renseigner.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Liens utiles</p>
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ path('app_home') }}" class="btn btn-sm rounded-xl border-0 bg-base-100 shadow-none">Accueil</a>
+                <a href="{{ path('app_menu') }}" class="btn btn-sm rounded-xl border-0 bg-base-100 shadow-none">Carte</a>
+                <a href="{{ path('app_contact') }}" class="btn btn-sm rounded-xl border-0 bg-base-100 shadow-none">Contact</a>
+                {% for page in legal_pages %}
+                    <a href="{{ path('app_page_show', {slug: page.slug}) }}" class="btn btn-sm rounded-xl border-0 bg-base-100 shadow-none">{{ page.title }}</a>
+                {% endfor %}
+            </div>
+            {% if social_links is not empty %}
+                <div class="flex flex-wrap gap-2">
+                    {% for social_link in social_links %}
+                        <a href="{{ social_link.url }}" target="_blank" rel="noreferrer" class="text-sm font-semibold text-base-content/72 no-underline hover:text-primary">
+                            {{ social_link.label ?: social_link.type.value|title }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="text-sm text-base-content/60">&copy; {{ 'now'|date('Y') }} {{ site_settings and site_settings.businessName ? site_settings.businessName : 'Sandwicherie 26' }}</p>
         </div>
     </div>
 </footer>

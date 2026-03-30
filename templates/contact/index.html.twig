@@ -1,28 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ page and page.seoTitleOrDefault ? page.seoTitleOrDefault : 'Contact | Sandwicherie 26' }}{% endblock %}
-{% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'Contactez Sandwicherie 26 pour une demande d\'information, une commande ou un besoin particulier.' }}{% endblock %}
+{% block title %}{{ page and page.seoTitleOrDefault ? page.seoTitleOrDefault : 'Contact | ' ~ (site_settings and site_settings.businessName ? site_settings.businessName : 'Sandwicherie 26') }}{% endblock %}
+{% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'Contactez le commerce, trouvez les horaires et demandez un itineraire.' }}{% endblock %}
 
 {% block body %}
     <section class="space-y-8">
-        <header class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#af4e24] px-5 py-12 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-14">
-            <div class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+        <header class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#af4e24] px-5 py-10 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-12">
+            <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
                 <div class="space-y-4">
-                    <p class="font-headline text-sm font-bold uppercase tracking-[0.2em] text-primary-content/78">Nous contacter</p>
-                    <h1 class="max-w-2xl text-4xl font-black leading-tight sm:text-5xl">
-                        Une demande directe, une commande, ou simplement une question.
-                    </h1>
+                    <p class="font-headline text-sm font-bold uppercase tracking-[0.2em] text-primary-content/78">Contact</p>
+                    <h1 class="max-w-2xl text-4xl font-black leading-tight sm:text-5xl">{{ page and page.title ? page.title : 'Nous contacter' }}</h1>
                     <p class="max-w-2xl text-base leading-7 text-primary-content/84 sm:text-lg">
-                        Utilise le formulaire pour nous ecrire. Le ton reste simple, la reponse utile, et l'experience
-                        visuelle garde la chaleur editoriale du design system.
+                        {{ page and page.introduction ? page.introduction : 'Toutes les informations utiles pour appeler, ecrire, venir et demander un itineraire.' }}
                     </p>
                 </div>
                 <div class="rounded-[1.5rem] bg-white/12 p-5 backdrop-blur-sm">
-                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-primary-content/70">Disponibilite</p>
-                    <p class="mt-3 text-3xl font-black">Rapide</p>
-                    <p class="mt-2 text-sm leading-6 text-primary-content/78">
-                        Pour une information produit, une demande de commande ou un besoin particulier.
-                    </p>
+                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-primary-content/70">Actions utiles</p>
+                    <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                        {% if site_settings and site_settings.phone %}
+                            <a href="tel:{{ site_settings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="btn btn-neutral btn-sm rounded-xl border-0">Appeler</a>
+                        {% endif %}
+                        {% if site_settings and site_settings.email %}
+                            <a href="mailto:{{ site_settings.email }}" class="btn btn-sm rounded-xl border-white/18 bg-white/10 text-primary-content shadow-none hover:bg-white/16">Ecrire</a>
+                        {% endif %}
+                        {% if itinerary_url %}
+                            <a href="{{ itinerary_url }}" target="_blank" rel="noreferrer" class="btn btn-sm rounded-xl border-white/18 bg-white/10 text-primary-content shadow-none hover:bg-white/16">Itineraire</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </header>
@@ -31,11 +35,12 @@
             <aside class="space-y-6 rounded-[1.75rem] bg-base-200 p-6 sm:p-8">
                 <div class="space-y-3">
                     <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Coordonnees</p>
-                    <h2 class="text-3xl font-black leading-tight">Venir facilement, ecrire simplement.</h2>
-                    <p class="text-base leading-7 text-base-content/76">
-                        La carte reste utile et sobre. Si la localisation n’est pas encore renseignee, la page reste
-                        pleinement fonctionnelle avec les autres informations.
-                    </p>
+                    <h2 class="text-3xl font-black leading-tight">Venir facilement, contacter rapidement.</h2>
+                    {% if page and page.content %}
+                        <p class="text-base leading-7 text-base-content/76">{{ page.content }}</p>
+                    {% else %}
+                        <p class="text-base leading-7 text-base-content/76">La page contact doit d'abord etre pratique : adresse, horaires, carte, formulaire et actions utiles.</p>
+                    {% endif %}
                 </div>
 
                 <div class="space-y-4 text-sm leading-6 text-base-content/76">
@@ -44,26 +49,28 @@
                             <p class="font-semibold text-base-content">Adresse</p>
                             <p>{{ site_settings.fullAddress ?: site_settings.shortAddress ?: 'Adresse a renseigner.' }}</p>
                         </div>
-                        <div class="grid gap-4 sm:grid-cols-2">
+                        {% if site_settings.phone %}
                             <div>
                                 <p class="font-semibold text-base-content">Telephone</p>
-                                <p>{{ site_settings.phone ?: 'Non renseigne' }}</p>
+                                <p><a href="tel:{{ site_settings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="no-underline hover:text-primary">{{ site_settings.phone }}</a></p>
                             </div>
+                        {% endif %}
+                        {% if site_settings.email %}
                             <div>
                                 <p class="font-semibold text-base-content">Email</p>
-                                <p>{{ site_settings.email ?: 'Non renseigne' }}</p>
+                                <p><a href="mailto:{{ site_settings.email }}" class="no-underline hover:text-primary">{{ site_settings.email }}</a></p>
                             </div>
-                        </div>
+                        {% endif %}
+                        {% if site_settings.whatsapp %}
+                            <div>
+                                <p class="font-semibold text-base-content">WhatsApp</p>
+                                <p>{{ site_settings.whatsapp }}</p>
+                            </div>
+                        {% endif %}
                     {% else %}
                         <p>Les informations du site ne sont pas encore renseignees.</p>
                     {% endif %}
                 </div>
-
-                {% if itinerary_url %}
-                    <a href="{{ itinerary_url }}" target="_blank" rel="noreferrer" class="btn btn-primary w-full rounded-xl sm:w-auto">
-                        Itineraire
-                    </a>
-                {% endif %}
 
                 {% if opening_hours is not empty %}
                     <div class="space-y-3">
@@ -128,7 +135,7 @@
                                     </a>
                                 {% endif %}
                             </div>
-                            {{ ux_map(contact_map, { class: 'h-80 w-full overflow-hidden rounded-[1.25rem]' }) }}
+                            {{ ux_map(contact_map, { class: 'h-72 w-full overflow-hidden rounded-[1.25rem] sm:h-80' }) }}
                         </div>
                     {% else %}
                         <div class="rounded-[1.25rem] bg-base-200 p-6 text-sm leading-6 text-base-content/72">
@@ -138,38 +145,56 @@
                 </section>
 
                 <div class="rounded-[1.75rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)] sm:p-8">
-                {% for message in app.flashes('success') %}
-                    <div class="alert mb-6 border-0 bg-secondary/12 text-secondary shadow-none">
-                        <span>{{ message }}</span>
-                    </div>
-                {% endfor %}
+                    {% for message in app.flashes('success') %}
+                        <div class="alert mb-6 border-0 bg-secondary/12 text-secondary shadow-none">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
 
-                {{ form_start(form, {attr: {class: 'space-y-5'}}) }}
-                    <div class="form-control">
-                        {{ form_label(form.name, 'Nom', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
-                        {{ form_widget(form.name, {attr: {class: 'input w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
-                        {{ form_errors(form.name) }}
-                    </div>
+                    {{ form_start(form, {attr: {class: 'space-y-5'}}) }}
+                        {% if not form.vars.valid %}
+                            <div class="alert border-0 bg-error/12 text-error shadow-none">
+                                <span>{{ form_errors(form) }}</span>
+                            </div>
+                        {% endif %}
 
-                    <div class="form-control">
-                        {{ form_label(form.email, 'Email', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
-                        {{ form_widget(form.email, {attr: {class: 'input w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
-                        {{ form_errors(form.email) }}
-                    </div>
+                        <div class="grid gap-5 sm:grid-cols-2">
+                            <div class="form-control">
+                                {{ form_label(form.name, 'Nom', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
+                                {{ form_widget(form.name, {attr: {class: 'input w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
+                                {{ form_errors(form.name) }}
+                            </div>
 
-                    <div class="form-control">
-                        {{ form_label(form.message, 'Message', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
-                        {{ form_widget(form.message, {attr: {class: 'textarea min-h-40 w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
-                        {{ form_errors(form.message) }}
-                    </div>
+                            <div class="form-control">
+                                {{ form_label(form.email, 'Email', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
+                                {{ form_widget(form.email, {attr: {class: 'input w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
 
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <p class="text-sm leading-6 text-base-content/62">Chaque message est lu puis traite localement.</p>
-                        <button type="submit" class="btn btn-primary w-full rounded-xl px-6 sm:w-auto">
-                            Envoyer
-                        </button>
-                    </div>
-                {{ form_end(form) }}
+                        <div class="form-control">
+                            {{ form_label(form.phone, 'Telephone (facultatif)', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
+                            {{ form_widget(form.phone, {attr: {class: 'input w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
+                            {{ form_errors(form.phone) }}
+                        </div>
+
+                        <div class="hidden">
+                            {{ form_widget(form.website) }}
+                        </div>
+
+                        <div class="form-control">
+                            {{ form_label(form.message, 'Message', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
+                            {{ form_widget(form.message, {attr: {class: 'textarea min-h-40 w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
+                            {{ form_errors(form.message) }}
+                        </div>
+
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <p class="text-sm leading-6 text-base-content/62">Le formulaire reste simple, lisible sur mobile et protege par un champ anti-spam discret.</p>
+                            <button type="submit" class="btn btn-primary w-full rounded-xl px-6 sm:w-auto">
+                                Envoyer
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>

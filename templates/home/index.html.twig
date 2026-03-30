@@ -1,128 +1,220 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ page and page.seoTitleOrDefault ? page.seoTitleOrDefault : 'Accueil | Sandwicherie 26' }}{% endblock %}
-{% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'Decouvrez Sandwicherie 26, ses produits disponibles et une offre de quartier simple pour la pause dejeuner.' }}{% endblock %}
+{% block title %}{{ page and page.seoTitleOrDefault ? page.seoTitleOrDefault : 'Accueil | ' ~ (site_settings and site_settings.businessName ? site_settings.businessName : 'Sandwicherie 26') }}{% endblock %}
+{% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'Decouvrez la carte, les horaires, les avis et les informations pratiques du commerce.' }}{% endblock %}
 
 {% block body %}
-    <section class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#af4e24] px-5 py-12 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-16 lg:px-12">
-        <div class="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-            <div class="space-y-6">
-                <p class="font-headline text-sm font-bold uppercase tracking-[0.22em] text-primary-content/78">Gourmet editorial</p>
-                <div class="max-w-3xl space-y-4">
-                    <h1 class="max-w-2xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-                        Des sandwiches de quartier servis avec chaleur et relief.
+    <section class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#af4e24] px-5 py-10 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-14 lg:px-10">
+        <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+            <div class="space-y-5">
+                <p class="font-headline text-sm font-bold uppercase tracking-[0.22em] text-primary-content/78">
+                    {{ site_settings and site_settings.slogan ? site_settings.slogan : 'Pause dejeuner locale' }}
+                </p>
+                <div class="space-y-4">
+                    <h1 class="max-w-3xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                        {{ page and page.title ? page.title : (site_settings and site_settings.businessName ? site_settings.businessName : 'Une sandwicherie locale, simple et genereuse.') }}
                     </h1>
                     <p class="max-w-2xl text-base leading-7 text-primary-content/84 sm:text-lg">
-                        Une offre lisible, des produits disponibles sans friction et une ambiance plus proche d'un comptoir
-                        artisanal que d'une interface standardisee.
+                        {{ page and page.introduction ? page.introduction : 'Consulte la carte, trouve rapidement les horaires, l’adresse et les informations utiles pour venir ou commander.' }}
                     </p>
                 </div>
                 <div class="flex flex-col gap-3 sm:flex-row">
-                    <a href="{{ path('app_contact') }}" class="btn btn-neutral rounded-xl border-0 px-6 shadow-none">
-                        Nous contacter
+                    <a href="{{ path('app_menu') }}" class="btn btn-neutral rounded-xl border-0 px-6 shadow-none">
+                        Voir la carte
                     </a>
-                    <a href="#menu" class="btn rounded-xl border-white/18 bg-white/10 px-6 text-primary-content shadow-none backdrop-blur-sm hover:bg-white/16">
-                        Voir la selection
-                    </a>
+                    {% if itinerary_url %}
+                        <a href="{{ itinerary_url }}" target="_blank" rel="noreferrer" class="btn rounded-xl border-white/18 bg-white/10 px-6 text-primary-content shadow-none backdrop-blur-sm hover:bg-white/16">
+                            Itineraire
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_contact') }}" class="btn rounded-xl border-white/18 bg-white/10 px-6 text-primary-content shadow-none backdrop-blur-sm hover:bg-white/16">
+                            Nous trouver
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="flex flex-wrap gap-3 text-sm text-primary-content/80">
+                    {% if site_settings and site_settings.shortAddress %}
+                        <span class="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">{{ site_settings.shortAddress }}</span>
+                    {% endif %}
+                    {% if site_settings and site_settings.phone %}
+                        <a href="tel:{{ site_settings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="rounded-full bg-white/10 px-4 py-2 no-underline backdrop-blur-sm hover:bg-white/16">{{ site_settings.phone }}</a>
+                    {% endif %}
                 </div>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                <div class="rounded-[1.5rem] bg-white/12 p-5 backdrop-blur-sm">
-                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-primary-content/70">Service</p>
-                    <p class="mt-3 text-3xl font-black">Rapide</p>
-                    <p class="mt-2 text-sm leading-6 text-primary-content/78">Des commandes simples a passer et une preparation pensee pour le temps de midi.</p>
-                </div>
-                <div class="rounded-[1.5rem] bg-white/12 p-5 backdrop-blur-sm">
-                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-primary-content/70">Cuisine</p>
-                    <p class="mt-3 text-3xl font-black">Genereuse</p>
-                    <p class="mt-2 text-sm leading-6 text-primary-content/78">Une carte claire, des essentiels bien executes et un ton plus chaleureux que demonstratif.</p>
+            <div class="grid gap-4">
+                {% if site_settings and site_settings.heroImage %}
+                    <div class="overflow-hidden rounded-[1.5rem] bg-white/12">
+                        <img src="{{ site_settings.heroImage }}" alt="{{ site_settings.businessName ?: 'Hero' }}" class="h-64 w-full object-cover sm:h-72">
+                    </div>
+                {% endif %}
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-[1.5rem] bg-white/12 p-5 backdrop-blur-sm">
+                        <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-primary-content/70">Adresse</p>
+                        <p class="mt-3 text-lg font-bold">{{ site_settings and site_settings.shortAddress ? site_settings.shortAddress : 'A renseigner' }}</p>
+                    </div>
+                    <div class="rounded-[1.5rem] bg-white/12 p-5 backdrop-blur-sm">
+                        <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-primary-content/70">Horaires</p>
+                        <p class="mt-3 text-sm leading-6 text-primary-content/84">
+                            {% if opening_hours is not empty %}
+                                {{ opening_hours|first.isClosed ? 'Consulter les horaires' : (opening_hours|first.firstOpeningAt ? opening_hours|first.firstOpeningAt|date('H:i') : 'Consulter les horaires') }}
+                            {% else %}
+                                Consulte les horaires sur la page contact
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="py-12 sm:py-16">
-        <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-            <div class="space-y-3">
-                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Le comptoir</p>
-                <h2 class="text-3xl font-black leading-tight text-base-content sm:text-4xl">
-                    Une sandwicherie de quartier, pensee comme une carte editoriale.
-                </h2>
-            </div>
-            <div class="space-y-4 rounded-[1.75rem] bg-base-200 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] sm:p-8">
-                <p class="text-base leading-7 text-base-content/78">
-                    Nous preparons chaque jour une offre simple, genereuse et accessible, pensee pour les pauses dejeuner
-                    et les petites faims.
-                </p>
-                <p class="text-base leading-7 text-base-content/78">
-                    Les sections s'appuient sur des fonds creme, terracotta et olive pour faire ressortir les contenus
-                    sans recourir a des bordures dures ni a des cartes trop techniques.
-                </p>
-                <div class="h-1 w-20 rounded-full bg-accent/35"></div>
-                <p class="text-sm font-medium uppercase tracking-[0.16em] text-accent">
-                    Simplicite, rythme et lisibilite.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="menu" class="rounded-[2rem] bg-base-300/80 px-5 py-10 sm:px-8 sm:py-12">
-        <div class="space-y-8">
-            <div class="max-w-3xl space-y-3">
-                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Selection du jour</p>
-                <h2 class="text-3xl font-black leading-tight sm:text-4xl">Notre selection</h2>
-                <p class="max-w-2xl text-base leading-7 text-base-content/76">
-                    Quelques produits disponibles a la commande, presentes sur des couches chaudes pour conserver le
-                    relief du design system.
-                </p>
-            </div>
-
-            {% if products is empty %}
-                <div class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.45)]">
-                    <p class="text-base-content/76">Aucun produit disponible pour le moment.</p>
+    {% if featured_items is not empty %}
+        <section class="py-10 sm:py-14">
+            <div class="space-y-6">
+                <div class="max-w-3xl space-y-3">
+                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Mises en avant</p>
+                    <h2 class="text-3xl font-black leading-tight sm:text-4xl">L'essentiel du moment</h2>
+                    <p class="text-base leading-7 text-base-content/76">Produits ou categories mis en avant depuis l'administration, sans surcharge visuelle.</p>
                 </div>
-            {% else %}
-                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {% for product in products %}
-                        <article class="card rounded-[1.5rem] bg-white shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)]">
-                            <div class="card-body gap-4 p-6">
+
+                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    {% for featured_item in featured_items %}
+                        <article class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.3)]">
+                            <div class="space-y-4">
                                 <div class="space-y-2">
-                                    <p class="font-headline text-xs font-bold uppercase tracking-[0.16em] text-secondary">Disponible</p>
-                                    <h3 class="card-title text-2xl font-extrabold">{{ product.name }}</h3>
+                                    <p class="font-headline text-xs font-bold uppercase tracking-[0.16em] text-secondary">
+                                        {{ featured_item.type.value == 'product' ? 'Produit' : 'Categorie' }}
+                                    </p>
+                                    <h3 class="text-2xl font-extrabold">{{ featured_item.displayTitle }}</h3>
                                 </div>
-                                <p class="text-base leading-7 text-base-content/74">{{ product.description ?: 'Description a venir.' }}</p>
-                                <div class="card-actions mt-2 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                    <span class="font-headline text-xl font-black text-accent">
-                                        {{ product.price|number_format(2, ',', ' ') }} EUR
-                                    </span>
-                                    <span class="badge border-0 bg-secondary/14 px-4 py-3 text-secondary">
-                                        Frais du jour
-                                    </span>
+                                {% if featured_item.displayText %}
+                                    <p class="text-base leading-7 text-base-content/72">{{ featured_item.displayText }}</p>
+                                {% endif %}
+                                <div class="flex items-center justify-between gap-4">
+                                    {% if featured_item.shouldDisplayPrice %}
+                                        <span class="font-headline text-lg font-black text-accent">{{ featured_item.product.price|number_format(2, ',', ' ') }} EUR</span>
+                                    {% endif %}
+                                    {% if featured_item.type.value == 'category' and featured_item.category %}
+                                        <a href="{{ path('app_category_show', {slug: featured_item.category.slug}) }}" class="text-sm font-semibold text-primary no-underline hover:text-accent">Voir la categorie</a>
+                                    {% else %}
+                                        <a href="{{ path('app_menu') }}" class="text-sm font-semibold text-primary no-underline hover:text-accent">Voir la carte</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </article>
                     {% endfor %}
                 </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="grid gap-6 py-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div class="rounded-[1.75rem] bg-base-200 p-6 sm:p-8">
+            <div class="space-y-4">
+                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Informations utiles</p>
+                <h2 class="text-3xl font-black leading-tight">Venir vite, lire vite, choisir vite.</h2>
+                {% if page and page.content %}
+                    <p class="text-base leading-7 text-base-content/76">{{ page.content }}</p>
+                {% else %}
+                    <p class="text-base leading-7 text-base-content/76">Le front V1 met en avant les informations vraiment utiles : carte, horaires, adresse, contact et reponses rapides sur mobile.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+            {% if opening_hours is not empty %}
+                <section class="rounded-[1.75rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.25)]">
+                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Horaires</p>
+                    <div class="mt-4 space-y-2 text-sm leading-6 text-base-content/76">
+                        {% for opening_hour in opening_hours|slice(0, 4) %}
+                            <div class="flex justify-between gap-4">
+                                <span>{{ {
+                                    monday: 'Lundi',
+                                    tuesday: 'Mardi',
+                                    wednesday: 'Mercredi',
+                                    thursday: 'Jeudi',
+                                    friday: 'Vendredi',
+                                    saturday: 'Samedi',
+                                    sunday: 'Dimanche'
+                                }[opening_hour.dayOfWeek.value] }}</span>
+                                <span class="text-right">
+                                    {% if opening_hour.isClosed %}
+                                        Ferme
+                                    {% else %}
+                                        {{ opening_hour.firstOpeningAt ? opening_hour.firstOpeningAt|date('H:i') : '' }}{% if opening_hour.firstClosingAt %} - {{ opening_hour.firstClosingAt|date('H:i') }}{% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
             {% endif %}
+
+            <section class="rounded-[1.75rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.25)]">
+                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Contact</p>
+                <div class="mt-4 space-y-2 text-sm leading-6 text-base-content/76">
+                    {% if site_settings and site_settings.shortAddress %}
+                        <p>{{ site_settings.shortAddress }}</p>
+                    {% endif %}
+                    {% if site_settings and site_settings.phone %}
+                        <p><a href="tel:{{ site_settings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="no-underline hover:text-primary">{{ site_settings.phone }}</a></p>
+                    {% endif %}
+                    {% if site_settings and site_settings.email %}
+                        <p><a href="mailto:{{ site_settings.email }}" class="no-underline hover:text-primary">{{ site_settings.email }}</a></p>
+                    {% endif %}
+                </div>
+                <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+                    <a href="{{ path('app_contact') }}" class="btn btn-primary rounded-xl">Contact</a>
+                    {% if itinerary_url %}
+                        <a href="{{ itinerary_url }}" target="_blank" rel="noreferrer" class="btn btn-outline btn-primary rounded-xl">Itineraire</a>
+                    {% endif %}
+                </div>
+            </section>
         </div>
     </section>
 
-    <section id="contact" class="py-10 sm:py-12">
-        <div class="grid gap-6 rounded-[2rem] bg-gradient-to-r from-base-200 to-base-300 px-5 py-8 sm:px-8 sm:py-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div class="space-y-4">
-                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Contact</p>
-                <h2 class="text-3xl font-black leading-tight sm:text-4xl">Un besoin particulier ou une commande a preparer ?</h2>
-                <p class="max-w-2xl text-base leading-7 text-base-content/76">
-                    Contactez-nous pour une commande, une demande d'information ou pour preparer la suite du contenu du site.
-                </p>
+    {% if reviews is not empty %}
+        <section class="py-8 sm:py-10">
+            <div class="space-y-6">
+                <div class="max-w-3xl space-y-3">
+                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Avis</p>
+                    <h2 class="text-3xl font-black leading-tight sm:text-4xl">Ce que les clients retiennent</h2>
+                </div>
+                <div class="grid gap-5 lg:grid-cols-3">
+                    {% for review in reviews %}
+                        <article class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.25)]">
+                            <div class="space-y-4">
+                                <p class="text-sm leading-7 text-base-content/74">{{ review.content }}</p>
+                                <div class="flex items-center justify-between gap-4">
+                                    <div>
+                                        <p class="font-semibold text-base-content">{{ review.displayAuthor }}</p>
+                                        <p class="text-sm text-base-content/58">{{ review.displaySourceLabel }}</p>
+                                    </div>
+                                    <p class="font-headline text-lg font-black text-accent">{{ review.rating }}/5</p>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="flex flex-col gap-3 lg:items-end">
-                <a href="{{ path('app_contact') }}" class="btn btn-primary w-full rounded-xl px-6 sm:w-auto">
-                    Envoyer un message
-                </a>
-                <p class="text-sm text-base-content/64">Reponse rapide, ton direct, informations utiles.</p>
+        </section>
+    {% endif %}
+
+    {% if gallery_images is not empty %}
+        <section class="py-8 sm:py-10">
+            <div class="space-y-6">
+                <div class="max-w-3xl space-y-3">
+                    <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Galerie</p>
+                    <h2 class="text-3xl font-black leading-tight sm:text-4xl">Un apercu du lieu et de la carte</h2>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {% for image in gallery_images %}
+                        <figure class="overflow-hidden rounded-[1.5rem] bg-base-200">
+                            <img src="{{ image.image }}" alt="{{ image.altText ?: 'Galerie ' ~ loop.index }}" class="h-56 w-full object-cover">
+                        </figure>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% endif %}
 {% endblock %}

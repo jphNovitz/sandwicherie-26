@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sandwicherie 26{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}Sandwicherie 26 propose une offre simple, genereuse et accessible pour vos pauses dejeuner.{% endblock %}">
+    <title>{% block title %}{{ front_data.siteSettings and front_data.siteSettings.businessName ? front_data.siteSettings.businessName : 'Sandwicherie 26' }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ front_data.siteSettings and front_data.siteSettings.businessName ? front_data.siteSettings.businessName ~ ' propose une offre simple, genereuse et accessible pour vos pauses dejeuner.' : 'Sandwicherie 26 propose une offre simple, genereuse et accessible pour vos pauses dejeuner.' }}{% endblock %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
 <body class="min-h-screen text-base-content">
 {% include '_base_parts/_header.html.twig' %}
 
-<main class="mx-auto w-full max-w-screen-xl flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+<main class="mx-auto w-full max-w-screen-xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
     {% block body %}{% endblock %}
 </main>
 
