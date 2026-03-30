@@ -54,8 +54,8 @@ final class PageCrudController extends AbstractCrudController
             ->setHelp('Genere automatiquement a la creation, puis modifiable manuellement.');
         yield BooleanField::new('isActive', 'Active');
 
-        yield FormField::addFieldset('Contenus');
-        yield TextareaField::new('introduction', 'Introduction')->hideOnIndex();
+        yield FormField::addFieldset('Contenu editorial');
+        yield TextareaField::new('introduction', 'Intro / chapeau')->hideOnIndex();
         yield TextEditorField::new('content', 'Contenu')->hideOnIndex();
 
         yield FormField::addFieldset('SEO');

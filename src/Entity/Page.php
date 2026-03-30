@@ -152,11 +152,21 @@ class Page
         return $this->introduction;
     }
 
+    public function getIntro(): ?string
+    {
+        return $this->introduction;
+    }
+
     public function setIntroduction(?string $introduction): static
     {
         $this->introduction = $introduction;
 
         return $this;
+    }
+
+    public function setIntro(?string $intro): static
+    {
+        return $this->setIntroduction($intro);
     }
 
     public function getContent(): ?string

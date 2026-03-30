@@ -43,13 +43,9 @@ final class SiteSettingsCrudController extends AbstractCrudController
     {
         yield IdField::new('id')->hideOnForm();
         yield FormField::addFieldset('Identite');
-        yield TextField::new('businessName', 'Nom de l’enseigne')
+        yield TextField::new('businessName', 'Nom de l\'enseigne')
             ->setHelp('En pratique, une seule fiche est attendue pour le site.');
-        yield TextField::new('slogan', 'Accroche')->hideOnIndex();
-
-        yield FormField::addFieldset('Presentation');
-        yield TextareaField::new('welcomeText', 'Texte d’accueil')->hideOnIndex();
-        yield TextareaField::new('presentationText', 'Presentation')->hideOnIndex();
+        yield TextField::new('slogan', 'Accroche globale')->hideOnIndex();
 
         yield FormField::addFieldset('Coordonnees');
         yield TextField::new('phone', 'Telephone')->hideOnIndex();
@@ -70,7 +66,7 @@ final class SiteSettingsCrudController extends AbstractCrudController
         yield TextField::new('notificationEmail', 'Email de notification')->hideOnIndex();
         yield BooleanField::new('emailNotificationsEnabled', 'Notifications email');
 
-        yield FormField::addFieldset('Medias');
+        yield FormField::addFieldset('Media global');
         yield TextField::new('logo', 'Logo')->hideOnIndex();
         yield TextField::new('heroImage', 'Image hero')->hideOnIndex();
 

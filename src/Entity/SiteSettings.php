@@ -21,12 +21,6 @@ class SiteSettings
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slogan = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $welcomeText = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $presentationText = null;
-
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $phone = null;
 
@@ -146,30 +140,6 @@ class SiteSettings
     public function setSlogan(?string $slogan): static
     {
         $this->slogan = $slogan;
-
-        return $this;
-    }
-
-    public function getWelcomeText(): ?string
-    {
-        return $this->welcomeText;
-    }
-
-    public function setWelcomeText(?string $welcomeText): static
-    {
-        $this->welcomeText = $welcomeText;
-
-        return $this;
-    }
-
-    public function getPresentationText(): ?string
-    {
-        return $this->presentationText;
-    }
-
-    public function setPresentationText(?string $presentationText): static
-    {
-        $this->presentationText = $presentationText;
 
         return $this;
     }
