@@ -4,11 +4,16 @@ namespace App\Entity;
 
 use App\Enum\FeaturedItemType;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
 #[ORM\Table(name: 'featured_item')]
 class FeaturedItem
 {
+    public const MAX_ACTIVE_ITEMS = 6;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -19,9 +24,11 @@ class FeaturedItem
     private ?SiteSettings $siteSettings = null;
 
     #[ORM\Column(length: 20, enumType: FeaturedItemType::class)]
+    #[Assert\NotNull]
     private ?FeaturedItemType $type = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero]
     private int $position = 0;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -55,6 +62,11 @@ class FeaturedItem
         $now = new \DateTimeImmutable();
         $this->createdAt = $now;
         $this->updatedAt = $now;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getDisplayTarget();
     }
 
     public function getId(): ?int
@@ -115,6 +127,11 @@ class FeaturedItem
         return $this->shortText;
     }
 
+    public function getCustomText(): ?string
+    {
+        return $this->shortText;
+    }
+
     public function setShortText(?string $shortText): static
     {
         $this->shortText = $shortText;
@@ -122,7 +139,17 @@ class FeaturedItem
         return $this;
     }
 
+    public function setCustomText(?string $customText): static
+    {
+        return $this->setShortText($customText);
+    }
+
     public function isShowPrice(): bool
+    {
+        return $this->showPrice;
+    }
+
+    public function isDisplayPrice(): bool
     {
         return $this->showPrice;
     }
@@ -132,6 +159,11 @@ class FeaturedItem
         $this->showPrice = $showPrice;
 
         return $this;
+    }
+
+    public function setDisplayPrice(bool $displayPrice): static
+    {
+        return $this->setShowPrice($displayPrice);
     }
 
     public function isActive(): bool
@@ -192,5 +224,109 @@ class FeaturedItem
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getDisplayTarget(): string
+    {
+        return match ($this->type) {
+            FeaturedItemType::PRODUCT => $this->product?->getName() ?? 'Produit non defini',
+            FeaturedItemType::CATEGORY => $this->category?->getName() ?? 'Categorie non definie',
+            default => 'Mise en avant',
+        };
+    }
+
+    public function getDisplayTitle(): string
+    {
+        $customTitle = trim((string) $this->customTitle);
+
+        if ('' !== $customTitle) {
+            return $customTitle;
+        }
+
+        return $this->getDisplayTarget();
+    }
+
+    public function getDisplayText(): ?string
+    {
+        $customText = trim((string) $this->shortText);
+
+        if ('' !== $customText) {
+            return $customText;
+        }
+
+        return match ($this->type) {
+            FeaturedItemType::PRODUCT => $this->product?->getIngredients(),
+            FeaturedItemType::CATEGORY => $this->category?->getDescription(),
+            default => null,
+        };
+    }
+
+    public function getDisplayImage(): ?string
+    {
+        return match ($this->type) {
+            FeaturedItemType::PRODUCT => $this->product?->getImage(),
+            FeaturedItemType::CATEGORY => $this->category?->getImage(),
+            default => null,
+        };
+    }
+
+    public function shouldDisplayPrice(): bool
+    {
+        return FeaturedItemType::PRODUCT === $this->type && $this->showPrice && null !== $this->product;
+    }
+
+    #[Assert\Callback]
+    public function validateTargetConsistency(ExecutionContextInterface $context): void
+    {
+        if (null === $this->type) {
+            return;
+        }
+
+        if (null !== $this->product && null !== $this->category) {
+            $context->buildViolation('Une mise en avant doit cibler soit un produit, soit une categorie, jamais les deux.')
+                ->atPath('product')
+                ->addViolation();
+
+            return;
+        }
+
+        if (FeaturedItemType::PRODUCT === $this->type) {
+            if (null === $this->product) {
+                $context->buildViolation('Selectionne un produit quand le type est "produit".')
+                    ->atPath('product')
+                    ->addViolation();
+            }
+
+            if (null !== $this->category) {
+                $context->buildViolation('La categorie doit rester vide quand le type est "produit".')
+                    ->atPath('category')
+                    ->addViolation();
+            }
+
+            return;
+        }
+
+        if (null === $this->category) {
+            $context->buildViolation('Selectionne une categorie quand le type est "categorie".')
+                ->atPath('category')
+                ->addViolation();
+        }
+
+        if (null !== $this->product) {
+            $context->buildViolation('Le produit doit rester vide quand le type est "categorie".')
+                ->atPath('product')
+                ->addViolation();
+        }
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateTimestamps(): void
+    {
+        if (FeaturedItemType::CATEGORY === $this->type) {
+            $this->showPrice = false;
+        }
+
+        $this->updatedAt = new \DateTimeImmutable();
     }
 }
