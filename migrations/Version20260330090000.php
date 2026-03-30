@@ -82,7 +82,6 @@ final class Version20260330090000 extends AbstractMigration
         $allergen->addUniqueIndex(['code'], 'uniq_allergen_code');
 
         $product = $schema->getTable('product');
-        $product->renameColumn('description', 'ingredients');
         $product->addColumn('position', 'integer', ['default' => 0]);
         $product->addColumn('image', 'string', ['length' => 255, 'notnull' => false]);
         $product->addColumn('category_id', 'integer', ['notnull' => false]);
@@ -226,7 +225,6 @@ final class Version20260330090000 extends AbstractMigration
         $product->dropColumn('category_id');
         $product->dropColumn('created_at');
         $product->dropColumn('updated_at');
-        $product->renameColumn('ingredients', 'description');
 
         $schema->dropTable('allergen');
         $schema->dropTable('category');

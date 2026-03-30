@@ -19,7 +19,7 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $ingredients = null;
 
     #[ORM\Column(precision: 10, scale: 2)]
