@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page and page.seoTitleOrDefault ? page.seoTitleOrDefault : 'A propos | Sandwicherie 26' }}{% endblock %}
+{% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'En savoir plus sur le commerce, son approche et son offre de quartier.' }}{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-4xl space-y-8">
+        <header class="space-y-4 rounded-[2rem] bg-base-200 px-6 py-10 sm:px-8">
+            <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">A propos</p>
+            <h1 class="text-4xl font-black leading-tight sm:text-5xl">{{ page and page.title ? page.title : 'A propos' }}</h1>
+            {% if page and page.introduction %}
+                <p class="max-w-3xl text-base leading-7 text-base-content/76">{{ page.introduction }}</p>
+            {% elseif site_settings and site_settings.slogan %}
+                <p class="max-w-3xl text-base leading-7 text-base-content/76">{{ site_settings.slogan }}</p>
+            {% endif %}
+        </header>
+
+        <article class="prose max-w-none rounded-[2rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)] sm:p-8">
+            {{ page and page.content ? page.content|nl2br : 'Une adresse de quartier, une offre simple et une experience pensee pour etre utile au quotidien.' }}
+        </article>
+    </section>
+{% endblock %}
