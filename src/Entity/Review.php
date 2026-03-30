@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Enum\ReviewSourceType;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'review')]
+#[ORM\HasLifecycleCallbacks]
 class Review
 {
     #[ORM\Id]
@@ -18,24 +21,34 @@ class Review
     private ?SiteSettings $siteSettings = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 5)]
-    private ?string $authorInitial = null;
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 5)]
+    private ?string $lastInitial = null;
 
     #[ORM\Column(type: 'text')]
-    private ?string $text = null;
+    #[Assert\NotBlank]
+    private ?string $content = null;
 
     #[ORM\Column]
+    #[Assert\Range(min: 1, max: 5)]
     private int $rating = 5;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $source = null;
+    #[ORM\Column(length: 20, enumType: ReviewSourceType::class)]
+    private ?ReviewSourceType $sourceType = ReviewSourceType::DIRECT;
 
     #[ORM\Column(length: 500, nullable: true)]
-    private ?string $link = null;
+    #[Assert\Url]
+    private ?string $sourceUrl = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $sourceLabel = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero]
     private int $position = 0;
 
     #[ORM\Column]
@@ -56,7 +69,7 @@ class Review
 
     public function __toString(): string
     {
-        return trim(($this->firstName ?? '').' '.($this->authorInitial ?? ''));
+        return $this->getDisplayAuthor();
     }
 
     public function getId(): ?int
@@ -88,26 +101,86 @@ class Review
         return $this;
     }
 
+    public function getLastInitial(): ?string
+    {
+        return $this->lastInitial;
+    }
+
+    public function setLastInitial(string $lastInitial): static
+    {
+        $this->lastInitial = strtoupper(trim($lastInitial));
+
+        return $this;
+    }
+
     public function getAuthorInitial(): ?string
     {
-        return $this->authorInitial;
+        return $this->getLastInitial();
     }
 
     public function setAuthorInitial(string $authorInitial): static
     {
-        $this->authorInitial = $authorInitial;
+        return $this->setLastInitial($authorInitial);
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): static
+    {
+        $this->content = $content;
 
         return $this;
     }
 
     public function getText(): ?string
     {
-        return $this->text;
+        return $this->getContent();
     }
 
     public function setText(string $text): static
     {
-        $this->text = $text;
+        return $this->setContent($text);
+    }
+
+    public function getDisplayAuthor(): string
+    {
+        $firstName = trim((string) $this->firstName);
+        $lastInitial = trim((string) $this->lastInitial);
+
+        if ('' === $firstName && '' === $lastInitial) {
+            return 'Avis client';
+        }
+
+        if ('' === $lastInitial) {
+            return $firstName;
+        }
+
+        return trim(sprintf('%s %s.', $firstName, rtrim($lastInitial, '.')));
+    }
+
+    public function getSourceType(): ?ReviewSourceType
+    {
+        return $this->sourceType;
+    }
+
+    public function setSourceType(ReviewSourceType $sourceType): static
+    {
+        $this->sourceType = $sourceType;
+
+        return $this;
+    }
+
+    public function getSourceLabel(): ?string
+    {
+        return $this->sourceLabel;
+    }
+
+    public function setSourceLabel(?string $sourceLabel): static
+    {
+        $this->sourceLabel = $sourceLabel;
 
         return $this;
     }
@@ -124,28 +197,94 @@ class Review
         return $this;
     }
 
+    public function getDisplaySourceLabel(): string
+    {
+        $customLabel = trim((string) $this->sourceLabel);
+
+        if ('' !== $customLabel) {
+            return $customLabel;
+        }
+
+        return $this->sourceType?->getLabel() ?? 'Source';
+    }
+
     public function getSource(): ?string
     {
-        return $this->source;
+        return $this->getDisplaySourceLabel();
     }
 
     public function setSource(?string $source): static
     {
-        $this->source = $source;
+        $normalizedSource = strtolower(trim((string) $source));
+
+        $this->sourceType = match ($normalizedSource) {
+            'google' => ReviewSourceType::GOOGLE,
+            'facebook' => ReviewSourceType::FACEBOOK,
+            'direct', 'avis direct', '' => ReviewSourceType::DIRECT,
+            default => ReviewSourceType::OTHER,
+        };
+
+        $this->sourceLabel = match ($this->sourceType) {
+            ReviewSourceType::GOOGLE,
+            ReviewSourceType::FACEBOOK,
+            ReviewSourceType::DIRECT => null,
+            ReviewSourceType::OTHER => null !== $source ? trim($source) : null,
+        };
+
+        return $this;
+    }
+
+    public function getSourceUrl(): ?string
+    {
+        return $this->sourceUrl;
+    }
+
+    public function setSourceUrl(?string $sourceUrl): static
+    {
+        $this->sourceUrl = $sourceUrl;
 
         return $this;
     }
 
     public function getLink(): ?string
     {
-        return $this->link;
+        return $this->getSourceUrl();
     }
 
     public function setLink(?string $link): static
     {
-        $this->link = $link;
+        return $this->setSourceUrl($link);
+    }
 
-        return $this;
+    public function touch(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateTimestamps(): void
+    {
+        $now = new \DateTimeImmutable();
+        $this->updatedAt = $now;
+
+        if (!isset($this->createdAt)) {
+            $this->createdAt = $now;
+        }
+    }
+
+    public function normalizeAuthorInitial(): void
+    {
+        if (null !== $this->lastInitial) {
+            $this->lastInitial = strtoupper(trim($this->lastInitial));
+        }
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function normalizeFields(): void
+    {
+        $this->normalizeAuthorInitial();
     }
 
     public function getPosition(): int
