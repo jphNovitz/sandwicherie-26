@@ -35,12 +35,16 @@ class Product
     private bool $isAvailable = true;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'RESTRICT')]
     private ?Category $category = null;
 
     /** @var Collection<int, Allergen> */
     #[ORM\ManyToMany(targetEntity: Allergen::class, inversedBy: 'products')]
-    #[ORM\JoinTable(name: 'product_allergen')]
+    #[ORM\JoinTable(
+        name: 'product_allergen',
+        joinColumns: [new ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', onDelete: 'CASCADE')],
+        inverseJoinColumns: [new ORM\JoinColumn(name: 'allergen_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    )]
     private Collection $allergens;
 
     #[ORM\Column(type: 'datetime_immutable')]

@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\SiteSettings;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -26,6 +29,14 @@ final class SiteSettingsCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Reglage du site')
             ->setEntityLabelInPlural('Reglages du site')
             ->setDefaultSort(['id' => 'ASC']);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            ->remove(Crud::PAGE_DETAIL, Action::DELETE)
+            ->disable(Action::BATCH_DELETE);
     }
 
     public function configureFields(string $pageName): iterable
@@ -67,5 +78,10 @@ final class SiteSettingsCrudController extends AbstractCrudController
         yield TextareaField::new('generalNotes', 'Notes generales')->hideOnIndex();
         yield DateTimeField::new('createdAt', 'Cree le')->hideOnForm()->hideOnIndex();
         yield DateTimeField::new('updatedAt', 'Mis a jour le')->hideOnForm()->hideOnIndex();
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        $this->addFlash('warning', 'Les reglages du site ne peuvent pas etre supprimes depuis l’administration.');
     }
 }

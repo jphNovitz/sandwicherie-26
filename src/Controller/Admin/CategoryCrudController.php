@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -29,6 +32,11 @@ final class CategoryCrudController extends AbstractCrudController
             ->setDefaultSort(['position' => 'ASC', 'name' => 'ASC']);
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions->disable(Action::BATCH_DELETE);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->hideOnForm();
@@ -47,5 +55,22 @@ final class CategoryCrudController extends AbstractCrudController
         yield TextareaField::new('metaDescription', 'Meta description')->hideOnIndex();
 
         yield DateTimeField::new('updatedAt', 'Mise a jour')->hideOnForm()->hideOnIndex();
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        if (!$entityInstance instanceof Category) {
+            parent::deleteEntity($entityManager, $entityInstance);
+
+            return;
+        }
+
+        if (!$entityInstance->getProducts()->isEmpty()) {
+            $this->addFlash('danger', 'Impossible de supprimer cette categorie tant qu\'elle contient des produits.');
+
+            return;
+        }
+
+        parent::deleteEntity($entityManager, $entityInstance);
     }
 }

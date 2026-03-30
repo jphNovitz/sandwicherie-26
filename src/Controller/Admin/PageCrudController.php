@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Page;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -31,6 +34,14 @@ final class PageCrudController extends AbstractCrudController
             ->setDefaultSort(['code' => 'ASC']);
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            ->remove(Crud::PAGE_DETAIL, Action::DELETE)
+            ->disable(Action::BATCH_DELETE);
+    }
+
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->hideOnForm();
@@ -52,5 +63,10 @@ final class PageCrudController extends AbstractCrudController
         yield TextareaField::new('metaDescription', 'Meta description')->hideOnIndex();
 
         yield DateTimeField::new('updatedAt', 'Mise a jour')->hideOnForm();
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, object $entityInstance): void
+    {
+        $this->addFlash('warning', 'Les pages structurantes du socle ne peuvent pas etre supprimees depuis l’administration.');
     }
 }
