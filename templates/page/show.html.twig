@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.seoTitleOrDefault ?: 'Sandwicherie 26' }}{% endblock %}
+{% block meta_description %}{{ page.metaDescription ?: '' }}{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-4xl space-y-8">
+        <header class="space-y-4 rounded-[2rem] bg-base-200 px-6 py-10 sm:px-8">
+            <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">{{ page.code.value }}</p>
+            <h1 class="text-4xl font-black leading-tight sm:text-5xl">{{ page.title }}</h1>
+            {% if page.introduction %}
+                <p class="max-w-3xl text-base leading-7 text-base-content/76">{{ page.introduction }}</p>
+            {% endif %}
+        </header>
+
+        {% if page.content %}
+            <article class="prose max-w-none rounded-[2rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)] sm:p-8">
+                {{ page.content|nl2br }}
+            </article>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use App\Enum\PageCode;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
 #[ORM\Table(name: 'site_page')]
 class Page
@@ -97,6 +99,9 @@ class Page
     public function setTitle(string $title): static
     {
         $this->title = $title;
+        if (null === $this->slug || '' === $this->slug) {
+            $this->slug = self::slugify($title);
+        }
 
         return $this;
     }
@@ -108,7 +113,7 @@ class Page
 
     public function setSlug(string $slug): static
     {
-        $this->slug = $slug;
+        $this->slug = self::slugify($slug);
 
         return $this;
     }
@@ -116,6 +121,11 @@ class Page
     public function getSeoTitle(): ?string
     {
         return $this->seoTitle;
+    }
+
+    public function getSeoTitleOrDefault(): ?string
+    {
+        return $this->seoTitle ?: $this->title;
     }
 
     public function setSeoTitle(?string $seoTitle): static
@@ -195,5 +205,21 @@ class Page
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function ensureSlug(): void
+    {
+        if ((null === $this->slug || '' === $this->slug) && null !== $this->title) {
+            $this->slug = self::slugify($this->title);
+        }
+    }
+
+    private static function slugify(string $value): string
+    {
+        $slug = (new AsciiSlugger())->slug($value)->lower()->toString();
+
+        return '' !== $slug ? $slug : 'page';
     }
 }

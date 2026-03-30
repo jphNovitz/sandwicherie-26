@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil | Sandwicherie 26{% endblock %}
-{% block meta_description %}Decouvrez Sandwicherie 26, ses produits disponibles et une offre de quartier simple pour la pause dejeuner.{% endblock %}
+{% block title %}{{ page and page.seoTitleOrDefault ? page.seoTitleOrDefault : 'Accueil | Sandwicherie 26' }}{% endblock %}
+{% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'Decouvrez Sandwicherie 26, ses produits disponibles et une offre de quartier simple pour la pause dejeuner.' }}{% endblock %}
 
 {% block body %}
     <section class="overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary to-[#af4e24] px-5 py-12 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-16 lg:px-12">

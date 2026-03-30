@@ -2,27 +2,28 @@
 
 namespace App\Controller;
 
-use App\Enum\PageCode;
 use App\Entity\Page;
-use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class HomeController extends AbstractController
+final class PageController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    public function index(ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
+    #[Route('/{slug}', name: 'app_page_show', priority: -100, methods: ['GET'])]
+    public function show(string $slug, EntityManagerInterface $entityManager): Response
     {
         /** @var Page|null $page */
         $page = $entityManager->getRepository(Page::class)->findOneBy([
-            'code' => PageCode::HOME,
+            'slug' => $slug,
             'isActive' => true,
         ]);
 
-        return $this->render('home/index.html.twig', [
-            'products' => $productRepository->findBy(['isAvailable' => true], ['id' => 'DESC']),
+        if (!$page instanceof Page) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('page/show.html.twig', [
             'page' => $page,
         ]);
     }

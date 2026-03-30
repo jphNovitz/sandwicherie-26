@@ -5,7 +5,9 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
 #[ORM\Table(name: 'category')]
 class Category
@@ -75,6 +77,9 @@ class Category
     public function setName(string $name): static
     {
         $this->name = $name;
+        if (null === $this->slug || '' === $this->slug) {
+            $this->slug = self::slugify($name);
+        }
 
         return $this;
     }
@@ -134,7 +139,7 @@ class Category
 
     public function setSlug(string $slug): static
     {
-        $this->slug = $slug;
+        $this->slug = self::slugify($slug);
 
         return $this;
     }
@@ -142,6 +147,11 @@ class Category
     public function getSeoTitle(): ?string
     {
         return $this->seoTitle;
+    }
+
+    public function getSeoTitleOrDefault(): ?string
+    {
+        return $this->seoTitle ?: $this->name;
     }
 
     public function setSeoTitle(?string $seoTitle): static
@@ -210,5 +220,21 @@ class Category
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function ensureSlug(): void
+    {
+        if ((null === $this->slug || '' === $this->slug) && null !== $this->name) {
+            $this->slug = self::slugify($this->name);
+        }
+    }
+
+    private static function slugify(string $value): string
+    {
+        $slug = (new AsciiSlugger())->slug($value)->lower()->toString();
+
+        return '' !== $slug ? $slug : 'categorie';
     }
 }

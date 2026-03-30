@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ category.seoTitleOrDefault ?: category.name }}{% endblock %}
+{% block meta_description %}{{ category.metaDescription ?: '' }}{% endblock %}
+
+{% block body %}
+    <section class="space-y-8">
+        <header class="rounded-[2rem] bg-base-200 px-6 py-10 sm:px-8">
+            <div class="space-y-4">
+                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Carte</p>
+                <h1 class="text-4xl font-black leading-tight sm:text-5xl">{{ category.name }}</h1>
+                {% if category.description %}
+                    <p class="max-w-3xl text-base leading-7 text-base-content/76">{{ category.description }}</p>
+                {% endif %}
+            </div>
+        </header>
+
+        <section class="space-y-6">
+            {% if products is empty %}
+                <div class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.45)]">
+                    <p class="text-base-content/76">Aucun produit actif dans cette categorie pour le moment.</p>
+                </div>
+            {% else %}
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {% for product in products %}
+                        <article class="card rounded-[1.5rem] bg-white shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)]">
+                            <div class="card-body gap-4 p-6">
+                                <h2 class="card-title text-2xl font-extrabold">{{ product.name }}</h2>
+                                <p class="text-base leading-7 text-base-content/74">{{ product.ingredients ?: 'Ingredients a venir.' }}</p>
+                                <div class="card-actions mt-2 justify-between">
+                                    <span class="font-headline text-xl font-black text-accent">
+                                        {{ product.price|number_format(2, ',', ' ') }} EUR
+                                    </span>
+                                    <a href="{{ path('app_contact') }}" class="btn btn-primary btn-sm rounded-xl">Commander</a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </section>
+{% endblock %}

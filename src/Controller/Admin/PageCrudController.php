@@ -38,7 +38,9 @@ final class PageCrudController extends AbstractCrudController
         yield AssociationField::new('siteSettings', 'Site')->autocomplete()->hideOnIndex();
         yield ChoiceField::new('code', 'Code');
         yield TextField::new('title', 'Titre');
-        yield SlugField::new('slug', 'Slug')->setTargetFieldName('title');
+        yield SlugField::new('slug', 'Slug')
+            ->setTargetFieldName('title')
+            ->setHelp('Genere automatiquement a la creation, puis modifiable manuellement.');
         yield BooleanField::new('isActive', 'Active');
 
         yield FormField::addFieldset('Contenus');
@@ -46,7 +48,7 @@ final class PageCrudController extends AbstractCrudController
         yield TextEditorField::new('content', 'Contenu')->hideOnIndex();
 
         yield FormField::addFieldset('SEO');
-        yield TextField::new('seoTitle', 'SEO title')->hideOnIndex();
+        yield TextField::new('seoTitle', 'Titre SEO')->hideOnIndex();
         yield TextareaField::new('metaDescription', 'Meta description')->hideOnIndex();
 
         yield DateTimeField::new('updatedAt', 'Mise a jour')->hideOnForm();

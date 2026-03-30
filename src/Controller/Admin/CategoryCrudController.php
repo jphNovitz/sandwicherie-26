@@ -34,14 +34,16 @@ final class CategoryCrudController extends AbstractCrudController
         yield IdField::new('id')->hideOnForm();
         yield FormField::addFieldset('Categorie');
         yield TextField::new('name', 'Nom');
-        yield SlugField::new('slug', 'Slug')->setTargetFieldName('name');
+        yield SlugField::new('slug', 'Slug')
+            ->setTargetFieldName('name')
+            ->setHelp('Genere automatiquement a la creation, puis modifiable manuellement.');
         yield TextareaField::new('description', 'Description')->hideOnIndex();
         yield TextField::new('image', 'Image')->hideOnIndex();
         yield IntegerField::new('position', 'Position');
         yield BooleanField::new('isActive', 'Active');
 
         yield FormField::addFieldset('SEO');
-        yield TextField::new('seoTitle', 'SEO title')->hideOnIndex();
+        yield TextField::new('seoTitle', 'Titre SEO')->hideOnIndex();
         yield TextareaField::new('metaDescription', 'Meta description')->hideOnIndex();
 
         yield DateTimeField::new('updatedAt', 'Mise a jour')->hideOnForm()->hideOnIndex();
