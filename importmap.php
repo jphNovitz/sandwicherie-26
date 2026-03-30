@@ -28,35 +28,18 @@ return [
     'daisyui' => [
         'version' => '5.5.19',
     ],
-    'postcss-js' => [
-        'version' => '4.0.1',
-    ],
-    'picocolors' => [
-        'version' => '1.1.1',
-    ],
-    'css-selector-tokenizer' => [
-        'version' => '0.8.0',
-    ],
-    'culori/require' => [
-        'version' => '3.3.0',
-    ],
-    'camelcase-css' => [
-        'version' => '2.0.1',
-    ],
-    'postcss' => [
-        'version' => '8.4.21',
-    ],
-    'fastparse' => [
-        'version' => '1.1.2',
-    ],
-    'cssesc' => [
-        'version' => '3.0.0',
-    ],
-    'nanoid/non-secure' => [
-        'version' => '3.3.4',
-    ],
     'daisyui/daisyui.min.css' => [
         'version' => '5.5.19',
         'type' => 'css',
+    ],
+    'leaflet' => [
+        'version' => '1.9.4',
+    ],
+    'leaflet/dist/leaflet.min.css' => [
+        'version' => '1.9.4',
+        'type' => 'css',
+    ],
+    '@symfony/ux-leaflet-map' => [
+        'path' => './vendor/symfony/ux-leaflet-map/assets/dist/map_controller.js',
     ],
 ];

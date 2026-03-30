@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -47,8 +48,12 @@ final class SiteSettingsCrudController extends AbstractCrudController
         yield TextField::new('shortAddress', 'Adresse courte');
 
         yield FormField::addFieldset('Localisation');
-        yield TextField::new('latitude', 'Latitude')->hideOnIndex();
-        yield TextField::new('longitude', 'Longitude')->hideOnIndex();
+        yield NumberField::new('latitude', 'Latitude')
+            ->setNumDecimals(7)
+            ->hideOnIndex();
+        yield NumberField::new('longitude', 'Longitude')
+            ->setNumDecimals(7)
+            ->hideOnIndex();
 
         yield FormField::addFieldset('Formulaire et notifications');
         yield TextField::new('notificationEmail', 'Email de notification')->hideOnIndex();

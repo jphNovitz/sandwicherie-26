@@ -258,6 +258,21 @@ class SiteSettings
         return $this;
     }
 
+    public function hasCoordinates(): bool
+    {
+        return null !== $this->getLatitudeAsFloat() && null !== $this->getLongitudeAsFloat();
+    }
+
+    public function getLatitudeAsFloat(): ?float
+    {
+        return is_numeric($this->latitude) ? (float) $this->latitude : null;
+    }
+
+    public function getLongitudeAsFloat(): ?float
+    {
+        return is_numeric($this->longitude) ? (float) $this->longitude : null;
+    }
+
     public function getLogo(): ?string
     {
         return $this->logo;
