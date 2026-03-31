@@ -17,6 +17,30 @@
             </div>
         </header>
 
+        {% if site_settings and (site_settings.phone or site_settings.whatsapp) %}
+            <section class="rounded-[1.75rem] bg-gradient-to-r from-base-200 to-base-300 px-5 py-6 sm:px-8">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="space-y-2">
+                        <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Commander</p>
+                        <h2 class="text-2xl font-black">Une envie ? Contacte-nous directement.</h2>
+                        <p class="text-base leading-7 text-base-content/76">La V1 ne propose pas de commande en ligne native. Le passage a l'action se fait par le vrai canal disponible.</p>
+                    </div>
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        {% if site_settings.phone %}
+                            <a href="tel:{{ site_settings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="btn btn-primary rounded-xl">
+                                Commander par telephone
+                            </a>
+                        {% endif %}
+                        {% if site_settings.whatsapp %}
+                            <a href="https://wa.me/{{ site_settings.whatsapp|replace({' ': '', '.': '', '/': '', '+': ''}) }}" target="_blank" rel="noreferrer" class="btn btn-outline btn-primary rounded-xl">
+                                Commander via WhatsApp
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
         {% if menu_categories is empty %}
             <div class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.45)]">
                 <p class="text-base-content/76">Aucune categorie avec produits actifs n'est disponible pour le moment.</p>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Enum\PageCode;
 use App\Entity\Page;
+use App\Entity\SiteSettings;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +21,13 @@ final class HomeController extends AbstractController
             'code' => PageCode::HOME,
             'isActive' => true,
         ]);
+        /** @var SiteSettings|null $siteSettings */
+        $siteSettings = $entityManager->getRepository(SiteSettings::class)->findOneBy([], ['id' => 'ASC']);
 
         return $this->render('home/index.html.twig', [
             'products' => $productRepository->findBy(['isAvailable' => true], ['id' => 'DESC']),
             'page' => $page,
+            'site_settings' => $siteSettings,
         ]);
     }
 }

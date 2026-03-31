@@ -6,6 +6,7 @@ use App\Enum\PageCode;
 use App\Entity\Category;
 use App\Entity\Page;
 use App\Entity\Product;
+use App\Entity\SiteSettings;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,8 @@ final class MenuController extends AbstractController
             'code' => PageCode::MENU,
             'isActive' => true,
         ]);
+        /** @var SiteSettings|null $siteSettings */
+        $siteSettings = $entityManager->getRepository(SiteSettings::class)->findOneBy([], ['id' => 'ASC']);
 
         $categories = $entityManager->getRepository(Category::class)->findBy([
             'isActive' => true,
@@ -52,6 +55,7 @@ final class MenuController extends AbstractController
         return $this->render('menu/index.html.twig', [
             'page' => $page,
             'menu_categories' => $menuCategories,
+            'site_settings' => $siteSettings,
         ]);
     }
 }
