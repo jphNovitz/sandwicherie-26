@@ -1,3 +1,6 @@
+parameters:
+    admin_in_memory_username: 'admin'
+
 security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
@@ -6,7 +9,7 @@ security:
         in_memory:
             memory:
                 users:
-                    '%env(default:admin:ADMIN_IN_MEMORY_USERNAME)%':
+                    '%env(default:admin_in_memory_username:ADMIN_IN_MEMORY_USERNAME)%':
                         password: '%env(default::ADMIN_IN_MEMORY_PASSWORD_HASH)%'
                         roles:
                             - ROLE_ADMIN
