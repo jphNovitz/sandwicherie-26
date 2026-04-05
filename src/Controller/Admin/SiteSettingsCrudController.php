@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -67,8 +68,16 @@ final class SiteSettingsCrudController extends AbstractCrudController
         yield BooleanField::new('emailNotificationsEnabled', 'Notifications email');
 
         yield FormField::addFieldset('Media global');
-        yield TextField::new('logo', 'Logo')->hideOnIndex();
-        yield TextField::new('heroImage', 'Image hero')->hideOnIndex();
+        yield ImageField::new('logo', 'Logo')
+            ->setBasePath('images/siteConfig')
+            ->setUploadDir('public/images/siteConfig')
+            ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->hideOnIndex();
+        yield ImageField::new('heroImage', 'Image hero')
+            ->setBasePath('images/siteConfig')
+            ->setUploadDir('public/images/siteConfig')
+            ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->hideOnIndex();
 
         yield FormField::addFieldset('Technique');
         yield TextareaField::new('generalNotes', 'Notes generales')->hideOnIndex();
