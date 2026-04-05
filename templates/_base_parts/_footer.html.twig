@@ -1,15 +1,37 @@
 <footer class="mt-12 bg-base-300/70">
+    {% set siteSettings = app.request is defined ? app.request.attributes.get('site_settings') : null %}
+    {% set businessName = siteSettings and siteSettings.businessName ? siteSettings.businessName : 'Sandwicherie 26' %}
+
     <div class="mx-auto grid w-full max-w-screen-xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
         <div class="space-y-3">
-            <p class="font-headline text-lg font-extrabold uppercase tracking-tight text-primary">Sandwicherie 26</p>
+            <p class="font-headline text-lg font-extrabold uppercase tracking-tight text-primary">{{ businessName }}</p>
             <p class="max-w-xl text-sm leading-6 text-base-content/72">
-                Une sandwicherie de quartier au ton editorial chaleureux, pensee pour les pauses dejeuner simples,
-                genereuses et bien executees.
+                {{ siteSettings and siteSettings.slogan
+                    ? siteSettings.slogan
+                    : 'Une sandwicherie de quartier au ton editorial chaleureux, pensee pour les pauses dejeuner simples, genereuses et bien executees.' }}
             </p>
         </div>
         <div class="space-y-2 text-sm text-base-content/72 lg:justify-self-end lg:text-right">
-            <p>&copy; {{ "now"|date("Y") }} Sandwicherie 26</p>
-            <p>Commandes, demandes et informations via notre page contact.</p>
+            <p>&copy; {{ "now"|date("Y") }} {{ businessName }}</p>
+            {% if siteSettings and siteSettings.shortAddress %}
+                <p>{{ siteSettings.shortAddress }}</p>
+            {% endif %}
+            {% if siteSettings and siteSettings.phone %}
+                <p>
+                    <a href="tel:{{ siteSettings.phone|replace({' ': '', '.': '', '/': ''}) }}" class="link link-hover">
+                        {{ siteSettings.phone }}
+                    </a>
+                </p>
+            {% endif %}
+            {% if siteSettings and siteSettings.email %}
+                <p>
+                    <a href="mailto:{{ siteSettings.email }}" class="link link-hover">
+                        {{ siteSettings.email }}
+                    </a>
+                </p>
+            {% else %}
+                <p>Commandes, demandes et informations via notre page contact.</p>
+            {% endif %}
         </div>
     </div>
 </footer>
