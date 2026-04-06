@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -46,7 +47,11 @@ final class CategoryCrudController extends AbstractCrudController
             ->setTargetFieldName('name')
             ->setHelp('Genere automatiquement a la creation, puis modifiable manuellement.');
         yield TextareaField::new('description', 'Description')->hideOnIndex();
-        yield TextField::new('image', 'Image')->hideOnIndex();
+        yield ImageField::new('image', 'Image')
+            ->setBasePath('images/categories')
+            ->setUploadDir('public/images/categories')
+            ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->hideOnIndex();
         yield IntegerField::new('position', 'Position');
         yield BooleanField::new('isActive', 'Active');
 
