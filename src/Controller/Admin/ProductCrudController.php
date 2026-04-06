@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -40,7 +41,11 @@ final class ProductCrudController extends AbstractCrudController
         yield AssociationField::new('allergens', 'Allergenes')->autocomplete()->hideOnIndex();
 
         yield FormField::addFieldset('Affichage');
-        yield TextField::new('image', 'Image')->hideOnIndex();
+        yield ImageField::new('image', 'Image')
+            ->setBasePath('images/products')
+            ->setUploadDir('public/images/products')
+            ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->hideOnIndex();
         yield IntegerField::new('position', 'Position');
         yield BooleanField::new('isActive', 'Actif');
     }
