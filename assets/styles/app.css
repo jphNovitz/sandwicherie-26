@@ -58,4 +58,12 @@
     background-color: color-mix(in srgb, var(--color-primary) 28%, white);
     color: var(--color-base-content);
   }
+
+  .leaflet-container,
+  .leaflet-pane,
+  .leaflet-top,
+  .leaflet-bottom,
+  .leaflet-control {
+    z-index: 0;
+  }
 }
