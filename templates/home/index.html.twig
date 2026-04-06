@@ -103,7 +103,8 @@
             <div class="rounded-[2rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)] sm:p-8">
                 <div class="space-y-6">
                     <div class="space-y-3">
-                        <h2 class="font-headline text-3xl font-black leading-tight text-base-content sm:text-4xl">
+                        <h2 class="font-headline flex items-center gap-3 text-3xl font-black leading-tight text-base-content sm:text-4xl">
+                            {{ ux_icon('mdi:clock-outline', { class: 'h-8 w-8 text-primary shrink-0' })|raw }}
                             Nos horaires
                         </h2>
                     </div>
@@ -154,7 +155,8 @@
             <div class="rounded-[2rem] bg-base-200 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] sm:p-5">
                 <div class="space-y-4">
                     <div class="px-2 pt-2">
-                        <h2 class="font-headline text-3xl font-black leading-tight text-base-content sm:text-4xl">
+                        <h2 class="font-headline flex items-center gap-3 text-3xl font-black leading-tight text-base-content sm:text-4xl">
+                            {{ ux_icon('mdi:map-marker-outline', { class: 'h-8 w-8 text-primary shrink-0' })|raw }}
                             Nous contacter
                         </h2>
                         {% if site_settings and (site_settings.fullAddress or site_settings.shortAddress) %}
@@ -178,6 +180,7 @@
                         <div class="px-2 pb-2">
                             <a href="{{ itinerary_url }}" target="_blank" rel="noreferrer" class="btn btn-primary rounded-xl px-6">
                                 Ouvrir dans Google Maps
+                                {{ ux_icon('mdi:open-in-new', { class: 'h-5 w-5' })|raw }}
                             </a>
                         </div>
                     {% endif %}
