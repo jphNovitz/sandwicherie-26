@@ -1,0 +1,36 @@
+<article class="card rounded-[1.5rem] bg-white shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)]">
+    {% if featuredItem.displayImage %}
+        <figure class="aspect-[4/3] overflow-hidden rounded-t-[1.5rem] bg-base-200">
+            <img
+                src="{{ asset(featuredItem.displayImage) }}"
+                alt="{{ featuredItem.displayTitle }}"
+                class="h-full w-full object-cover"
+            >
+        </figure>
+    {% endif %}
+    <div class="card-body gap-4 p-6">
+        <div class="space-y-2">
+            {% if featuredItem.type.value == 'category' %}
+                <p class="font-headline text-xs font-bold uppercase tracking-[0.16em] text-secondary">
+                    Categorie
+                </p>
+            {% endif %}
+            <h3 class="card-title text-2xl font-extrabold">{{ featuredItem.displayTitle }}</h3>
+        </div>
+        <p class="text-base leading-7 text-base-content/74">{{ featuredItem.displayText ?: 'Description a venir.' }}</p>
+        <div class="card-actions mt-2 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            {% if featuredItem.shouldDisplayPrice and featuredItem.product and featuredItem.product.price %}
+                <span class="font-headline text-xl font-black text-accent">
+                    {{ featuredItem.product.price|number_format(2, ',', ' ') }} EUR
+                </span>
+            {% else %}
+                <span class="font-headline text-sm font-bold uppercase tracking-[0.14em] text-accent">
+                    {{ featuredItem.type.value == 'product' ? 'Produit du comptoir' : 'A decouvrir sur la carte' }}
+                </span>
+            {% endif %}
+            <span class="badge border-0 bg-secondary/14 px-4 py-3 text-secondary">
+                {{ featuredItem.type.value == 'product' ? 'Frais du jour' : 'Selection maison' }}
+            </span>
+        </div>
+    </div>
+</article>
