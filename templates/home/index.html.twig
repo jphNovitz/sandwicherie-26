@@ -49,6 +49,30 @@
         </div>
     </section>
 
+    <section id="menu" class="rounded-[2rem] bg-base-300/80 px-5 py-10 sm:px-8 sm:py-12">
+        <div class="space-y-8">
+            <div class="max-w-3xl space-y-3">
+                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Selection du jour</p>
+                <h2 class="text-3xl font-black leading-tight sm:text-4xl">Notre selection</h2>
+                <p class="w-full text-base leading-7 text-base-content/76">
+                    Une selection pilotee depuis les mises en avant de l’accueil pour faire remonter les produits et categories prioritaires.
+                </p>
+            </div>
+
+            {% if featured_items is empty %}
+                <div class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.45)]">
+                    <p class="text-base-content/76">Aucune mise en avant active pour le moment.</p>
+                </div>
+            {% else %}
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {% for featuredItem in featured_items %}
+                        <twig:FeaturedItemCard :featuredItem="featuredItem" />
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
     <section class="py-12 sm:py-16">
         <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div class="space-y-3">
@@ -74,27 +98,88 @@
         </div>
     </section>
 
-    <section id="menu" class="rounded-[2rem] bg-base-300/80 px-5 py-10 sm:px-8 sm:py-12">
-        <div class="space-y-8">
-            <div class="max-w-3xl space-y-3">
-                <p class="font-headline text-sm font-bold uppercase tracking-[0.18em] text-secondary">Selection du jour</p>
-                <h2 class="text-3xl font-black leading-tight sm:text-4xl">Notre selection</h2>
-                <p class="w-full text-base leading-7 text-base-content/76">
-                    Une selection pilotee depuis les mises en avant de l’accueil pour faire remonter les produits et categories prioritaires.
-                </p>
+    <section class="py-12 sm:py-16">
+        <div class="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
+            <div class="rounded-[2rem] bg-white p-6 shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)] sm:p-8">
+                <div class="space-y-6">
+                    <div class="space-y-3">
+                        <h2 class="font-headline text-3xl font-black leading-tight text-base-content sm:text-4xl">
+                            Nos horaires
+                        </h2>
+                    </div>
+
+                    {% if opening_hours is not empty %}
+                        <div class="space-y-2">
+                            {% for opening_hour in opening_hours %}
+                                <div class="flex items-start justify-between gap-4 border-b border-base-300/70 py-3 last:border-b-0">
+                                    <span class="font-medium text-base-content">
+                                        {{ {
+                                            monday: 'Lundi',
+                                            tuesday: 'Mardi',
+                                            wednesday: 'Mercredi',
+                                            thursday: 'Jeudi',
+                                            friday: 'Vendredi',
+                                            saturday: 'Samedi',
+                                            sunday: 'Dimanche'
+                                        }[opening_hour.dayOfWeek.value] }}
+                                    </span>
+                                    <span class="text-right text-sm leading-6 text-base-content/72">
+                                        {% if opening_hour.isClosed %}
+                                            <span class="font-semibold italic text-primary">Ferme</span>
+                                        {% else %}
+                                            {{ opening_hour.firstOpeningAt ? opening_hour.firstOpeningAt|date('H:i') : '' }}
+                                            {% if opening_hour.firstClosingAt %}- {{ opening_hour.firstClosingAt|date('H:i') }}{% endif %}
+                                            {% if opening_hour.secondOpeningAt and opening_hour.secondClosingAt %}
+                                                <br>{{ opening_hour.secondOpeningAt|date('H:i') }} - {{ opening_hour.secondClosingAt|date('H:i') }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="rounded-[1.25rem] bg-base-200 p-5 text-sm leading-6 text-base-content/72">
+                            Les horaires seront affiches ici des qu’ils seront renseignes dans l’administration.
+                        </div>
+                    {% endif %}
+
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <a href="{{ path('app_contact') }}" class="btn btn-primary rounded-xl px-6">
+                            Nous contacter
+                        </a>
+                        {% if itinerary_url %}
+                            <a href="{{ itinerary_url }}" target="_blank" rel="noreferrer" class="btn btn-outline btn-primary rounded-xl px-6">
+                                Itineraire
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
 
-            {% if featured_items is empty %}
-                <div class="rounded-[1.5rem] bg-white p-6 shadow-[0_20px_45px_-38px_rgba(30,27,25,0.45)]">
-                    <p class="text-base-content/76">Aucune mise en avant active pour le moment.</p>
+            <div class="rounded-[2rem] bg-base-200 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] sm:p-5">
+                <div class="space-y-4">
+                    <div class="px-2 pt-2">
+                        <h2 class="font-headline text-3xl font-black leading-tight text-base-content sm:text-4xl">
+                            Nous contacter
+                        </h2>
+                        {% if site_settings and (site_settings.fullAddress or site_settings.shortAddress) %}
+                            <p class="mt-4 text-base leading-7 text-base-content/76">
+                                {{ site_settings.fullAddress ?: site_settings.shortAddress }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    {% if contact_map %}
+                        <div class="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)]">
+                            {{ ux_map(contact_map, { class: 'h-72 w-full sm:h-80 lg:h-[26rem]' }) }}
+                        </div>
+                    {% else %}
+                        <div class="rounded-[1.5rem] bg-white p-6 text-sm leading-6 text-base-content/72 shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)]">
+                            La carte apparaitra ici des que la latitude et la longitude du commerce seront renseignees.
+                        </div>
+                    {% endif %}
                 </div>
-            {% else %}
-                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {% for featuredItem in featured_items %}
-                        <twig:FeaturedItemCard :featuredItem="featuredItem" />
-                    {% endfor %}
-                </div>
-            {% endif %}
+            </div>
         </div>
     </section>
 
