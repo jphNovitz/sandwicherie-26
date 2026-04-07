@@ -1,8 +1,11 @@
 <article class="card rounded-[1.5rem] bg-white shadow-[0_24px_50px_-40px_rgba(30,27,25,0.42)]">
-    {% if featuredItem.displayImage %}
+    {% if featuredItem.displayImage is not null %}
+        {% set imagePath = featuredItem.type.value == 'product'
+            ? 'images/products/' ~ featuredItem.displayImage
+            : 'images/categories/' ~ featuredItem.displayImage %}
         <figure class="aspect-[4/3] overflow-hidden rounded-t-[1.5rem] bg-base-200">
             <img
-                src="{{ asset(featuredItem.displayImage) }}"
+                src="{{ asset(imagePath) }}"
                 alt="{{ featuredItem.displayTitle }}"
                 class="h-full w-full object-cover"
             >
