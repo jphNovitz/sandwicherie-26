@@ -5,8 +5,8 @@
 
 {% block body %}
     <section class="hero overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#af4e24] to-primary/20 px-5 py-12 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-16 lg:px-12">
-        <div class="hero-content flex-col lg:flex-row space-x-8">
-            <div class="space-y-4">
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center">
+            <div class="min-w-0 space-y-4">
                 <p class="font-headline text-sm font-bold uppercase tracking-[0.22em] text-primary-content/78">Gourmet editorial</p>
                 <div class="max-w-3xl space-y-4">
                     <h1 class="max-w-2xl text-3xl font-black leading-tight tracking-tighter sm:text-4xl lg:text-5xl">
@@ -34,9 +34,11 @@
             </div>
 
                 {% if site_settings and site_settings.heroImage %}
-                   <img src="{{ asset(site_settings.heroImage) }}"
+                <div class="min-w-0">
+                    <img src="{{ asset(site_settings.heroImage) }}"
                         alt="Visuel principal de l'enseigne {{site_settings.businessName}}"
-                        class="w-full rounded-2xl shadow-2xl">
+                        class="block max-h-72 h-auto w-full max-w-full rounded-2xl object-cover shadow-2xl lg:max-h-none">
+                </div>
 
                     {#<div class="relative overflow-hidden rounded-[1.75rem] border border-white/18 bg-white/10 shadow-[0_24px_60px_-34px_rgba(30,27,25,0.5)]">
                         <img
@@ -44,6 +46,7 @@
                             alt="Visuel principal de l'enseigne"
                             class="max-w-sm rounded-lg shadow-2xl">
                     </div>#}
+                
                 {% endif %}
 
         </div>
