@@ -4,6 +4,7 @@
 {% block meta_description %}{{ page and page.metaDescription ? page.metaDescription : 'Decouvrez Sandwicherie 26, ses produits disponibles et une offre de quartier simple pour la pause dejeuner.' }}{% endblock %}
 
 {% block body %}
+    {% set heroImagePath = site_settings and site_settings.heroImage ? 'images/siteConfig/' ~ site_settings.heroImage : null %}
     <section class="hero overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#af4e24] to-primary/20 px-5 py-12 text-primary-content shadow-[0_26px_60px_-34px_rgba(30,27,25,0.45)] sm:px-8 sm:py-16 lg:px-12">
         <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center">
             <div class="min-w-0 space-y-4">
@@ -33,9 +34,9 @@
                 </div>
             </div>
 
-                {% if site_settings and site_settings.heroImage %}
+                {% if heroImagePath %}
                 <div class="min-w-0">
-                    <img src="{{ asset(site_settings.heroImage) }}"
+                    <img src="{{ asset(heroImagePath) }}"
                         alt="Visuel principal de l'enseigne {{site_settings.businessName}}"
                         class="block max-h-72 h-auto w-full max-w-full rounded-2xl object-cover shadow-2xl lg:max-h-none">
                 </div>
