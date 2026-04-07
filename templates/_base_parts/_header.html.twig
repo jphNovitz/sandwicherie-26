@@ -1,10 +1,14 @@
 <header class="sticky top-9 z-40 border-b border-white/0 bg-base-100/80 backdrop-blur-md">
     <div class="mx-auto flex w-full max-w-screen-xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
         {% set siteSettings = app.request is defined ? app.request.attributes.get('site_settings') : null %}
+        {% set logoPath = siteSettings and siteSettings.logo ? 'images/siteConfig/' ~ siteSettings.logo : null %}
 
         <div>
-            <a href="{{ path('app_home') }}" class="font-headline text-lg font-black uppercase tracking-tight text-primary no-underline sm:text-xl">
-                {{ siteSettings and siteSettings.businessName ? siteSettings.businessName : 'Sandwicherie 26' }}
+            <a href="{{ path('app_home') }}" class="font-headline inline-flex items-center gap-3 text-lg font-black uppercase tracking-tight text-primary no-underline sm:text-xl">
+                {% if logoPath %}
+                    <img src="{{ asset(logoPath) }}" alt="Logo {{ siteSettings.businessName ?: 'Sandwicherie 26' }}" class="h-10 w-auto max-w-28 object-contain">
+                {% endif %}
+                <span>{{ siteSettings and siteSettings.businessName ? siteSettings.businessName : 'Sandwicherie 26' }}</span>
             </a>
         </div>
 
