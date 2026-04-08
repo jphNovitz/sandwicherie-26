@@ -45,6 +45,10 @@
       linear-gradient(180deg, var(--color-base-100), var(--color-base-200));
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   h1,
   h2,
   h3,
@@ -65,5 +69,11 @@
   .leaflet-bottom,
   .leaflet-control {
     z-index: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
