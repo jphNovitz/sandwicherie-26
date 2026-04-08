@@ -37,7 +37,7 @@ final class ReviewCrudController extends AbstractCrudController
         yield IdField::new('id')->hideOnForm();
         yield AssociationField::new('siteSettings', 'Site')->autocomplete()->hideOnIndex();
         yield TextField::new('displayAuthor', 'Auteur')->onlyOnIndex();
-        yield IntegerField::new('rating', 'Note / 5')->setNumDecimals(0);
+        yield IntegerField::new('rating', 'Note / 5');
         yield TextField::new('displaySourceLabel', 'Source')->onlyOnIndex();
         yield TextField::new('content', 'Apercu')
             ->onlyOnIndex()
