@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\MediaGuidelines;
 use App\Entity\SiteSettings;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -72,11 +73,15 @@ final class SiteSettingsCrudController extends AbstractCrudController
             ->setBasePath('images/siteConfig')
             ->setUploadDir('public/images/siteConfig')
             ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->setFileConstraints(MediaGuidelines::logoConstraints())
+            ->setHelp(MediaGuidelines::logoHelp())
             ->hideOnIndex();
         yield ImageField::new('heroImage', 'Image hero')
             ->setBasePath('images/siteConfig')
             ->setUploadDir('public/images/siteConfig')
             ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->setFileConstraints(MediaGuidelines::heroConstraints())
+            ->setHelp(MediaGuidelines::heroHelp())
             ->hideOnIndex();
 
         yield FormField::addFieldset('Technique');

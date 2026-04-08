@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\MediaGuidelines;
 use App\Entity\Product;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -45,6 +46,8 @@ final class ProductCrudController extends AbstractCrudController
             ->setBasePath('images/products')
             ->setUploadDir('public/images/products')
             ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->setFileConstraints(MediaGuidelines::productConstraints())
+            ->setHelp(MediaGuidelines::productHelp())
             ->hideOnIndex();
         yield IntegerField::new('position', 'Position');
         yield BooleanField::new('isActive', 'Actif');

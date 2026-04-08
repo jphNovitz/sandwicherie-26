@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\MediaGuidelines;
 use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -51,6 +52,8 @@ final class CategoryCrudController extends AbstractCrudController
             ->setBasePath('images/categories')
             ->setUploadDir('public/images/categories')
             ->setUploadedFileNamePattern('[slug]-[timestamp].[extension]')
+            ->setFileConstraints(MediaGuidelines::categoryConstraints())
+            ->setHelp(MediaGuidelines::categoryHelp())
             ->hideOnIndex();
         yield IntegerField::new('position', 'Position');
         yield BooleanField::new('isActive', 'Active');
