@@ -148,7 +148,6 @@ feat(admin): add basic product management
 ### Action 7 — Affichage menu en front
 
 [DONE]
-
 Objectif :
 Afficher les produits
 
@@ -261,4 +260,38 @@ Stabiliser
 
 Commit :
 chore: cleanup and stabilization
-chore: cleanup and stabilization
+
+---
+
+## Suivi post-plan
+
+### Point 3 implémenté — Validation média V1 côté admin
+
+[DONE]
+
+Objectif :
+Appliquer les règles médias V1 sur les uploads déjà utilisés dans l’administration.
+
+Implémenté :
+
+- validation de format sur `jpg`, `jpeg`, `png`, `webp`
+- contrôle de poids maximal recommandé V1
+- contrôle de dimensions minimales recommandées
+- aide de saisie visible dans EasyAdmin
+
+Périmètre :
+
+- logo
+- image hero
+- image de catégorie
+- image de produit
+
+Commit :
+feat(admin): enforce v1 media validation rules
+
+### Priorités suivantes identifiées
+
+1. Notification email des messages de contact
+2. Anti-spam du formulaire de contact
+3. SEO technique complémentaire
+4. Finitions back-office sur les messages de contact
