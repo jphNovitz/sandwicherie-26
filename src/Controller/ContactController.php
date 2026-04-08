@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Enum\PageCode;
+use App\Enum\ContactMessageStatus;
+use App\Entity\ContactMessage;
 use App\Entity\Page;
 use App\Entity\SiteSettings;
 use App\Form\ContactType;
@@ -26,10 +28,19 @@ final class ContactController extends AbstractController
         /** @var SiteSettings|null $siteSettings */
         $siteSettings = $entityManager->getRepository(SiteSettings::class)->findOneBy([], ['id' => 'ASC']);
 
-        $form = $this->createForm(ContactType::class);
+        $contactMessage = (new ContactMessage())
+            ->setSiteSettings($siteSettings)
+            ->setStatus(ContactMessageStatus::NEW);
+
+        $form = $this->createForm(ContactType::class, $contactMessage);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $contactMessage->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->persist($contactMessage);
+            $entityManager->flush();
+
             $this->addFlash('success', 'Votre message a bien ete envoye.');
 
             return $this->redirectToRoute('app_contact');

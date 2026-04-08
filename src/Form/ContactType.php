@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\ContactMessage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -37,6 +38,14 @@ class ContactType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('phone', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 50,
+                    ]),
+                ],
+            ])
             ->add('message', TextareaType::class, [
                 'attr' => [
                     'rows' => 6,
@@ -56,6 +65,8 @@ class ContactType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'data_class' => ContactMessage::class,
+        ]);
     }
 }

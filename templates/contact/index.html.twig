@@ -182,6 +182,12 @@
                     </div>
 
                     <div class="form-control">
+                        {{ form_label(form.phone, 'Telephone', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
+                        {{ form_widget(form.phone, {attr: {class: 'input w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+
+                    <div class="form-control">
                         {{ form_label(form.message, 'Message', {label_attr: {class: 'mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-base-content/68'}}) }}
                         {{ form_widget(form.message, {attr: {class: 'textarea min-h-40 w-full rounded-xl border-0 bg-base-200 shadow-none focus:outline-none focus:ring-2 focus:ring-primary/20'}}) }}
                         {{ form_errors(form.message) }}
